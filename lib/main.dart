@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:phone_book/providers/contact_provider.dart';
 import 'package:phone_book/screens/homepage.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => ContactProvider(),
+      )
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
