@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:phone_book/controllers/call_service.dart';
 import 'package:phone_book/providers/contact_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<Color> colors = [
+    Colors.orange,
+    Colors.green,
+    Colors.brown,
+    Colors.red,
+    Colors.blue,
+    Colors.purple,
+    Colors.cyan,
+    Colors.pink,
+    Colors.black,
+    Colors.lime
+  ];
   @override
   Widget build(BuildContext context) {
     return Consumer<ContactProvider>(builder: (context, value, child) {
@@ -50,11 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                           subtitle: Text(contacts[index].number),
-                          leading: const CircleAvatar(
-                            backgroundColor: Colors.green,
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                colors[int.parse(index.toString()[0])],
                             child: Text(
-                              "N",
-                              style: TextStyle(
+                              contacts[index].name[0],
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -63,7 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    CallService()
+                                        .startCall(contacts[index].number);
+                                  },
                                   icon: const Icon(Icons.call)),
                               IconButton(
                                   onPressed: () {
