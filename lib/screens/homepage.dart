@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -48,7 +49,47 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: const Text("Add New Contact"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Card(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4),
+                        child: TextField(
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Contact Name"),
+                        ),
+                      ),
+                    ),
+                    const Card(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4),
+                        child: TextField(
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Contact Number"),
+                        ),
+                      ),
+                    ),
+                    FilledButton(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.green)),
+                        onPressed: () {},
+                        child: const Text("Save Contact"))
+                  ],
+                ),
+              );
+            },
+          );
+        },
         child: const Icon(
           Icons.add,
           color: Colors.white,
