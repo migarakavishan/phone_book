@@ -13,13 +13,20 @@ class ContactProvider extends ChangeNotifier {
   List<Contact> get contacts => _contacts;
 
   Future<void> addNewContact() async {
-    await DBController.addContact(_name.text, _number.text);
-    notifyListeners();
+    await DBController.addContact(_name.text, _number.text).then((value) {
+      clearTextFields();
+    });
   }
 
   Future<List<Contact>> fetchContacts() async {
     _contacts = await DBController.getContacts();
     Logger().f(_contacts.length);
     return _contacts;
+  }
+
+  void clearTextFields() {
+    _name.clear();
+    _number.clear();
+    notifyListeners();
   }
 }

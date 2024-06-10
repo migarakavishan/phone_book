@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:phone_book/providers/contact_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   icon: const Icon(Icons.edit)),
                               IconButton(
                                   onPressed: () {},
-                                  icon: const Icon(Icons.call)),
+                                  icon: const Icon(Icons.delete)),
                             ],
                           ),
                         ),
@@ -118,7 +119,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               backgroundColor:
                                   WidgetStatePropertyAll(Colors.green)),
                           onPressed: () {
-                            value.addNewContact();
+                            if (value.name.text.isNotEmpty &&
+                                value.number.text.isNotEmpty) {
+                              value.addNewContact().then((value) {
+                                Navigator.pop(context);
+                              });
+                            } else {
+                              Logger().e("Please insert contact details");
+                            }
                           },
                           child: const Text("Save Contact"))
                     ],
