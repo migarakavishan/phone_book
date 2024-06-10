@@ -31,4 +31,15 @@ class DBController {
         contactsData.map((e) => Contact.fromMap(e)).toList();
     return contacts;
   }
+
+  static Future<void> updateContact(Contact contact) async {
+    final db = await initDB();
+    db.update("Contacts", contact.toMap(),
+        where: 'id = ?', whereArgs: [contact.id]);
+  }
+
+  static Future<void> deleteContact(int id) async {
+    final db = await initDB();
+    db.delete("Contacts", where: 'id = ?', whereArgs: [id]);
+  }
 }

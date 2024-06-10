@@ -66,10 +66,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onPressed: () {},
                                   icon: const Icon(Icons.call)),
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    value.setTextFields(contacts[index]);
+                                    showContactDetails(context, value,
+                                        id: contacts[index].id, isUpdate: true);
+                                  },
                                   icon: const Icon(Icons.edit)),
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    value.deleteContact(contacts[index].id);
+                                  },
                                   icon: const Icon(Icons.delete)),
                             ],
                           ),
@@ -84,56 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.green,
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return CupertinoAlertDialog(
-                  title: const Text("Add New Contact"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: TextField(
-                            controller: value.name,
-                            decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Contact Name"),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: TextField(
-                            controller: value.number,
-                            decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Contact Number"),
-                          ),
-                        ),
-                      ),
-                      FilledButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  WidgetStatePropertyAll(Colors.green)),
-                          onPressed: () {
-                            if (value.name.text.isNotEmpty &&
-                                value.number.text.isNotEmpty) {
-                              value.addNewContact().then((value) {
-                                Navigator.pop(context);
-                              });
-                            } else {
-                              Logger().e("Please insert contact details");
-                            }
-                          },
-                          child: const Text("Save Contact"))
-                    ],
-                  ),
-                );
-              },
-            );
+            showContactDetails(context, value);
           },
           child: const Icon(
             Icons.add,
@@ -143,4 +100,61 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     });
   }
+}
+
+Future<dynamic> showContactDetails(BuildContext context, ContactProvider value,
+    {bool isUpdate = false, int? id}) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return CupertinoAlertDialog(
+        title: Text(!isUpdate ? "Add New Contact" : "Update Contact"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: TextField(
+                  controller: value.name,
+                  decoration: const InputDecoration(
+                      border: InputBorder.none, hintText: "Contact Name"),
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: TextField(
+                  controller: value.number,
+                  decoration: const InputDecoration(
+                      border: InputBorder.none, hintText: "Contact Number"),
+                ),
+              ),
+            ),
+            FilledButton(
+                style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.green)),
+                onPressed: () {
+                  if (value.name.text.isNotEmpty &&
+                      value.number.text.isNotEmpty) {
+                    if (isUpdate) {
+                      value.startUpdate(id!).then((value) {
+                        Navigator.pop(context);
+                      });
+                    } else {
+                      value.addNewContact().then((value) {
+                        Navigator.pop(context);
+                      });
+                    }
+                  } else {
+                    Logger().e("Please insert contact details");
+                  }
+                },
+                child: Text(!isUpdate ? "Save Contact" : "Update"))
+          ],
+        ),
+      );
+    },
+  );
 }

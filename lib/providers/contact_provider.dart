@@ -29,4 +29,24 @@ class ContactProvider extends ChangeNotifier {
     _number.clear();
     notifyListeners();
   }
+
+  void setTextFields(Contact contact) {
+    _name.text = contact.name;
+    _number.text = contact.number;
+    notifyListeners();
+  }
+
+  Future<void> startUpdate(int id) async {
+    DBController.updateContact(
+            Contact(id: id, name: _name.text, number: _number.text))
+        .then((value) {
+      clearTextFields();
+      notifyListeners();
+    });
+  }
+
+  Future<void> deleteContact(int id) async {
+    DBController.deleteContact(id);
+    notifyListeners();
+  }
 }
